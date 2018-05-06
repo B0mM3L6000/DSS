@@ -33,7 +33,7 @@ haushaltedf
 
 #Aufgabe 2:
 
-#l?schen unnoetiger spalten aus haushaltedf fuer aufgabe2.1
+#loeschen unnoetiger spalten aus haushaltedf fuer aufgabe2.1
 
 Vars <- colnames(haushaltedf)
 Vars
@@ -101,14 +101,13 @@ top10_2 <- top10_2[, !(Vars %in% Namen)]
 
 top10_2
 
-#alles au?er top10 aus dem datenframe entfernen
+#alles ausser top10 aus dem datenframe entfernen
 
 test2 <- subset(haushaltedfAgg2,haushaltedfAgg2$ID == top10_2[1] | haushaltedfAgg2$ID == top10_2[2] | haushaltedfAgg2$ID == top10_2[3] | haushaltedfAgg2$ID == top10_2[4] | haushaltedfAgg2$ID == top10_2[5] | haushaltedfAgg2$ID == top10_2[6] | haushaltedfAgg2$ID == top10_2[7] | haushaltedfAgg2$ID == top10_2[8] | haushaltedfAgg2$ID == top10_2[9] | haushaltedfAgg2$ID == top10_2[10])
 test2
 names(test2)[names(test2)=="ID"] <- "Stadtteil"
 
 test2
-
 
 library(ggplot2)
 
@@ -126,13 +125,13 @@ haushaltedfNeu3 <- haushaltedfNeu3[haushaltedfNeu3$zei_id > 10,]
 haushaltedfNeu3 <- haushaltedfNeu3[haushaltedfNeu3$zei_id < 40,]
 haushaltedfNeu3
 
-# ersetzten der id f?r kinderanzahl pro haushalt durch tatsaechliche anzahl
+# ersetzten der id fuer kinderanzahl pro haushalt durch tatsaechliche anzahl
 
 haushaltedfNeu3[haushaltedfNeu3$zei_id == 20,"zei_id"]   <- 1 
 haushaltedfNeu3[haushaltedfNeu3$zei_id == 30,"zei_id"]   <- 2  
 haushaltedfNeu3
 
-#hinzuf?gen neuer spalte: produkt von zei_id und zahl (sind einwohner gesamt f?r die kategorie/jahr/stadtteil)
+#hinzufuegen neuer spalte: produkt von zei_id und zahl (sind einwohner gesamt f?r die kategorie/jahr/stadtteil)
 
 haushaltedfNeu3 <- cbind(haushaltedfNeu3, "Summe"=haushaltedfNeu3$zei_id * haushaltedfNeu3$zahl)
 haushaltedfNeu3
@@ -158,7 +157,7 @@ top10_3 <- top10_3[, !(Vars %in% Namen)]
 
 top10_3
 
-#alles au?er top10 aus dem datenframe entfernen
+#alles ausser top10 aus dem datenframe entfernen
 
 test3 <- subset(haushaltedfAgg3,haushaltedfAgg3$ID == top10_3[1] | haushaltedfAgg3$ID == top10_3[2] | haushaltedfAgg3$ID == top10_3[3] | haushaltedfAgg3$ID == top10_3[4] | haushaltedfAgg3$ID == top10_3[5] | haushaltedfAgg3$ID == top10_3[6] | haushaltedfAgg3$ID == top10_3[7] | haushaltedfAgg3$ID == top10_3[8] | haushaltedfAgg3$ID == top10_3[9] | haushaltedfAgg3$ID == top10_3[10])
 test3

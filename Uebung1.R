@@ -387,7 +387,7 @@ aufgabe37mergedf
 
 
 
-# Die Spalte "Anteil gibt jeweils das Verhältnis des jeweiligen Falls (1-7) zur gesamten Einwohnerzahl des Jahres an
+# Die Spalte "Anteil gibt jeweils das Verhaeltnis des jeweiligen Falls (1-7) zur gesamten Einwohnerzahl des Jahres an
 # (Bspw.: Anteil von 0.01 entspricht 1%)
 
 
@@ -396,4 +396,97 @@ aufgabe37mergedf
 ############################################################################
 
 #Aufgabe 4:
+
+
+# auswahl der faktoren für die attraktivitätsscore in kurz (siehe powerpoint für ausführliche version):
+# 1. erholungsfläche in km² (anteil erholungsfläche * größe gebiet)
+# 2. arbeitslosigkeit (quote in %)
+# 3. jugendarbeitslosigkeit (quote in %)
+# 4. bewohner pro km²
+
+# Daten stehen in dichtedf (punkt 1 + 4) und beschaeftigtedf (2 + 3)
+
+beschaeftigtedf
+dichtedf
+
+#mergen der beiden tabellen:
+
+faktorendf <- merge(beschaeftigtedf, dichtedf, by.x=c("Stadtteil", "Nr."), by.y=c("Stadtteil", "Nr."))
+faktorendf
+
+#entfernen nicht benoetigter spalten:
+
+Vars <- colnames(faktorendf)
+Vars
+Namen <- c("Nr.", "Sozialversicherungspflichtig.Beschäftigte.am.Wohnort", "Quote", "Arbeitslose", "Einwohner.insgesamt", "Einwohner.mit..Hauptwohnung", "Einwohner.mit..Nebenwohnung")
+faktorendf <- faktorendf[, !(Vars %in% Namen)]
+faktorendf
+
+
+#erstellen neuer spalte als erholungsfläche pro stadtfläche (anteil erholungsflächeaneil/100 * stadtfläche):
+
+faktorendf <- cbind(faktorendf, "Erholungsflaeche"=faktorendf$Erholungs.flächenanteil.in.. / 100 * faktorendf$Stadtfläche.in.Quadratkilometer)
+faktorendf
+
+#löschen von den 2 jetzt nicht mehr benötigten spalten:
+
+Vars <- colnames(faktorendf)
+Vars
+Namen <- c("Stadtfläche.in.Quadratkilometer", "Erholungs.flächenanteil.in..")
+faktorendf <- faktorendf[, !(Vars %in% Namen)]
+faktorendf
+
+#interpolieren der faktoren auf eine skala von 0-1 (bzw 1-0) linear zur besseren vergleichbarkeit:
+
+#library zum rescalen
+library(RPMG)
+
+# 1. erholungsfläche (je mehr desto besser, also 0-1):
+
+faktorendf <- cbind(faktorendf, "Erholungsflaechenorm"=RESCALE(faktorendf$Erholungsflaeche, 0, 1, min(faktorendf$Erholungsflaeche), max(faktorendf$Erholungsflaeche)))
+
+# 2. arbeitslosigkeit (je weniger desto besser, also 1-0):
+
+faktorendf <- cbind(faktorendf, "Arbeitslosenquotenorm"=RESCALE(faktorendf$Arbeitslosenquote, 1, 0, min(faktorendf$Arbeitslosenquote), max(faktorendf$Arbeitslosenquote)))
+
+# 3. jugendarbeitslosigkeit (je weniger desto besser, also 1-0):
+
+faktorendf <- cbind(faktorendf, "Jugendarbeitslosenquotenorm"=RESCALE(faktorendf$Jugendarbeitslosenquote, 1, 0, min(faktorendf$Jugendarbeitslosenquote), max(faktorendf$Jugendarbeitslosenquote)))
+
+# 4. Einwohner pro km² (je weniger desto besser, also 1-0):
+
+faktorendf <- cbind(faktorendf, "Einwohnernorm"=RESCALE(faktorendf$Einwohner.je.Quadratkilometer, 1, 0, min(faktorendf$Einwohner.je.Quadratkilometer), max(faktorendf$Einwohner.je.Quadratkilometer)))
+
+
+#Jetzt anwenden der AHP Methode für diese 4 Faktoren und 5 Stadtteile:
+#  (Nur 5 Stadtteile statt allen 86, da die AHP Methode nur kleinere Probleme gedacht ist, da man den paarweisen, subjektiven Vergleich per Hand machen muss und 86 hier den Rahmen sprengen würde)
+
+#Betrachtet werden hier die 5 Stadtteile: Mühlheim, Chorweiler, Altstadt-Süd, Ehrenfeld, Hahnwald (zufällig gewählt)
+
+#Paarweiservergleich für die 4 Faktoren untereinander (oberes Level des AHP Baums)
+
+
+
+
+#Paarweiser Vergleich für die Handlungsalternativen(Stadtteile) untereinander, jeweils auf den einzelnen Faktor bezogen (Vergleich anhand der interpolieren Werte):
+
+# 1. Erholungsfläche:
+
+
+# 2. Arbeitslosenquote:
+
+
+# 3. Jugendarbeitslosenquote:
+
+
+# 4. Einwohner pro km²:
+
+
+
+
+
+#Ermitteln der Attraktivitätsscore für die 5 Handlungsalternativen anhand der AHP Gewichte:
+
+
+
 

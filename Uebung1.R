@@ -37,7 +37,7 @@ haushaltedf
 
 Vars <- colnames(haushaltedf)
 Vars
-Namen <- c("id", "kap_id", "kapitel", "tabelle", "zeile", "quelle", "linktabellenkommentar")
+Namen <- c("X.U.FEFF.id", "kap_id", "kapitel", "tabelle", "zeile", "quelle", "linktabellenkommentar")
 haushaltedfNeu <- haushaltedf[, !(Vars %in% Namen)]
 
 #neues dataframe
@@ -185,7 +185,7 @@ grafik2
 
 Vars <- colnames(bewegungdf)
 Vars
-Namen <- c("id", "kap_id", "kapitel", "tabelle", "zeile", "quelle", "linktabellenkommentar")
+Namen <- c("X.U.FEFF.id", "kap_id", "kapitel", "tabelle", "zeile", "quelle", "linktabellenkommentar")
 bewegungdfNeu <- bewegungdf[, !(Vars %in% Namen)]
 
 #neues dataframe
@@ -418,21 +418,21 @@ faktorendf
 
 Vars <- colnames(faktorendf)
 Vars
-Namen <- c("Nr.", "Sozialversicherungspflichtig.BeschÃ¤ftigte.am.Wohnort", "Quote", "Arbeitslose", "Einwohner.insgesamt", "Einwohner.mit..Hauptwohnung", "Einwohner.mit..Nebenwohnung")
+Namen <- c("Nr.", "Sozialversicherungspflichtig.Beschäftigte.am.Wohnort", "Quote", "Arbeitslose", "Einwohner.insgesamt", "Einwohner.mit..Hauptwohnung", "Einwohner.mit..Nebenwohnung")
 faktorendf <- faktorendf[, !(Vars %in% Namen)]
 faktorendf
 
 
 #erstellen neuer spalte als erholungsflÃ¤che pro stadtflÃ¤che (anteil erholungsflÃ¤cheaneil/100 * stadtflÃ¤che):
 
-faktorendf <- cbind(faktorendf, "Erholungsflaeche"=faktorendf$Erholungs.flÃ¤chenanteil.in.. / 100 * faktorendf$StadtflÃ¤che.in.Quadratkilometer)
+faktorendf <- cbind(faktorendf, "Erholungsflaeche"=faktorendf$Erholungs.flächenanteil.in.. / 100 * faktorendf$Stadtfläche.in.Quadratkilometer)
 faktorendf
 
 #lÃ¶schen von den 2 jetzt nicht mehr benÃ¶tigten spalten:
 
 Vars <- colnames(faktorendf)
 Vars
-Namen <- c("StadtflÃ¤che.in.Quadratkilometer", "Erholungs.flÃ¤chenanteil.in..")
+Namen <- c("Stadtfläche.in.Quadratkilometer", "Erholungs.flächenanteil.in..")
 faktorendf <- faktorendf[, !(Vars %in% Namen)]
 faktorendf
 
@@ -463,30 +463,78 @@ faktorendf <- cbind(faktorendf, "Einwohnernorm"=RESCALE(faktorendf$Einwohner.je.
 
 #Betrachtet werden hier die 5 Stadtteile: MÃ¼hlheim, Chorweiler, Altstadt-SÃ¼d, Ehrenfeld, Hahnwald (zufÃ¤llig gewÃ¤hlt)
 
-#Paarweiservergleich fÃ¼r die 4 Faktoren untereinander (oberes Level des AHP Baums)
+#faktorendfNeu <- subset(faktorendf, faktorendf$Stadtteil == "Mülheim" | faktorendf$Stadtteil == "Chorweiler" | faktorendf$Stadtteil == "Ehrenfeld" | faktorendf$Stadtteil == "Hahnwald" | faktorendf$Stadtteil == "Altstadt-Süd")
 
 
+#Paarweiservergleich fÃ¼r die 4 Faktoren untereinander (oberes Level des AHP Baums) [siehe Powerpoint]
+#  Die resultierende AHP Matrix in FuzzyAHP eingeben um Prioritätenvektor zu erhalten:
+
+library(FuzzyAHP)
+
+comparisonMatrixValues = c(1,1/5,1/7,1,
+                           NA,1,1/3,5,
+                           NA,NA,1, 7,
+                           NA,NA,NA,1)
+comparisonMatrix = matrix(comparisonMatrixValues, nrow = 4, ncol = 4, byrow = TRUE)
+comparisonMatrix = pairwiseComparisonMatrix(comparisonMatrix)
+
+#Zeigen der AHP Matrix:
+
+show(comparisonMatrix)
+weights = calculateWeights(comparisonMatrix)
+
+#Zeigen der Gewichte für die 4 Faktoren:
+
+print(weights)
 
 
-#Paarweiser Vergleich fÃ¼r die Handlungsalternativen(Stadtteile) untereinander, jeweils auf den einzelnen Faktor bezogen (Vergleich anhand der interpolieren Werte):
+#Ermitteln der Attraktivitätsscore mit den Gewichten für die Attribute, sowie den normiereten Values unseres Dataframes für die Faktoren je Stadtteil:
+# (Mithilfe des Fuzzy AHP Packages)
 
-# 1. ErholungsflÃ¤che:
+valuestest <- faktorendf$Erholungsflaechenorm
+valuestest <- cbind(valuestest, faktorendf$Arbeitslosenquotenorm)
+valuestest <- cbind(valuestest, faktorendf$Jugendarbeitslosenquotenorm)
+valuestest <- cbind(valuestest, faktorendf$Einwohnernorm)
 
-
-# 2. Arbeitslosenquote:
-
-
-# 3. Jugendarbeitslosenquote:
-
-
-# 4. Einwohner pro kmÂ²:
+valuestest
 
 
+#values = c(faktorendfNeu$Erholungsflaechenorm[1], faktorendfNeu$Arbeitslosenquotenorm[1], faktorendfNeu$Jugendarbeitslosenquotenorm[1], faktorendfNeu$Einwohnernorm[1],
+#           faktorendfNeu$Erholungsflaechenorm[2], faktorendfNeu$Arbeitslosenquotenorm[2], faktorendfNeu$Jugendarbeitslosenquotenorm[2], faktorendfNeu$Einwohnernorm[2],
+#           faktorendfNeu$Erholungsflaechenorm[3], faktorendfNeu$Arbeitslosenquotenorm[3], faktorendfNeu$Jugendarbeitslosenquotenorm[3], faktorendfNeu$Einwohnernorm[3],
+#           faktorendfNeu$Erholungsflaechenorm[4], faktorendfNeu$Arbeitslosenquotenorm[4], faktorendfNeu$Jugendarbeitslosenquotenorm[4], faktorendfNeu$Einwohnernorm[4],
+#           faktorendfNeu$Erholungsflaechenorm[5], faktorendfNeu$Arbeitslosenquotenorm[5], faktorendfNeu$Jugendarbeitslosenquotenorm[5], faktorendfNeu$Einwohnernorm[5])
+#values
+#
+#values = matrix(values, nrow = length(values)/length(weights@weights), ncol = length(weights@weights), byrow = TRUE)
+#values
 
 
+# Ausgeben der Scores:
 
-#Ermitteln der AttraktivitÃ¤tsscore fÃ¼r die 5 Handlungsalternativen anhand der AHP Gewichte:
+result = calculateAHP(weights, valuestest)
+result
 
 
+score <- data.frame(faktorendf$Stadtteil)
+score <- cbind(score, result)
 
 
+#print(order(result))
+
+# Ranken der Stadtteil:
+
+rank = compareResults(result)
+print(rank)
+
+#print(order(rank))
+
+score <- score[order(score$result, decreasing = TRUE),] 
+
+grafik4 <- ggplot(score, aes(x=faktorendf.Stadtteil, y=result, fill=faktorendf.Stadtteil)) + geom_bar(stat = "identity", color="Black") +coord_flip() + ylab("Attraktivität") + xlab("Stadtteil")+ ggtitle("Attraktivität der Stadtteile")  + theme_classic() + theme(legend.position="none")
+grafik4 
+
+score$test <- reorder(score$faktorendf.Stadtteil, score$result)
+
+grafik5 <- ggplot(score, aes(y=score$result, fill=test)) + geom_bar(aes(x=test), data=score, stat = "identity", color="Black") +coord_flip() + ylab("Attraktivität") + xlab("Stadtteil")+ ggtitle("Attraktivität der Stadtteile")  + theme_classic() + theme(legend.position="none") + theme(axis.text.y = element_text(angle=30, vjust=0.5))
+grafik5

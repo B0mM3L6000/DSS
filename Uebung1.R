@@ -20,13 +20,6 @@ dichtedf <- read.table(dichte, sep=",", header=TRUE, encoding="UTF-8")
 geburtentodedf <- read.table(geburtentode, sep=",", header=TRUE, encoding="UTF-8")
 haushaltedf <- read.table(haushalte, sep=";", header=TRUE, encoding="UTF-8")
 
-#ausgeben (zu testzwecken)
-
-beschaeftigtedf
-bewegungdf
-dichtedf
-geburtentodedf
-haushaltedf
 
 ############################################################################
 
@@ -37,7 +30,7 @@ haushaltedf
 
 Vars <- colnames(haushaltedf)
 Vars
-Namen <- c("X.U.FEFF.id", "kap_id", "kapitel", "tabelle", "zeile", "quelle", "linktabellenkommentar")
+Namen <- c("id", "kap_id", "kapitel", "tabelle", "zeile", "quelle", "linktabellenkommentar")
 haushaltedfNeu <- haushaltedf[, !(Vars %in% Namen)]
 
 #neues dataframe
@@ -107,7 +100,7 @@ test2 <- subset(haushaltedfAgg2,haushaltedfAgg2$ID == top10_2[1] | haushaltedfAg
 test2
 names(test2)[names(test2)=="ID"] <- "Stadtteil"
 
-test2
+print(test2)
 
 library(ggplot2)
 
@@ -163,7 +156,7 @@ test3 <- subset(haushaltedfAgg3,haushaltedfAgg3$ID == top10_3[1] | haushaltedfAg
 test3
 names(test3)[names(test3)=="ID"] <- "Stadtteil"
 
-test3
+print(test3)
 
 
 #plotten:
@@ -185,18 +178,14 @@ grafik2
 
 Vars <- colnames(bewegungdf)
 Vars
-Namen <- c("X.U.FEFF.id", "kap_id", "kapitel", "tabelle", "zeile", "quelle", "linktabellenkommentar")
+Namen <- c("id", "kap_id", "kapitel", "tabelle", "zeile", "quelle", "linktabellenkommentar")
 bewegungdfNeu <- bewegungdf[, !(Vars %in% Namen)]
 
-#neues dataframe
-
-bewegungdfNeu
 
 #entfernen der Stadtbezirke + gesamt koeln
 
 bewegungdfNeu <- bewegungdfNeu[bewegungdfNeu$raum_id > 9,]
 
-bewegungdfNeu
 
 #bedeutungen:
 #tab_id: 10 = umzuege (verschiedener sorten)  /   20 = sterbe- und geburtenzahlen
@@ -220,7 +209,6 @@ bewegungdfNeu
 #Fall 1: Aussenfortzug (zei_id: 10 und tab_id: 10):
 
 aufgabe31df <- subset(bewegungdfNeu, bewegungdfNeu$zei_id == 10 & bewegungdfNeu$tab_id == 10)
-aufgabe31df
 
 
 #entfernen der unwichtigen spalten:
@@ -228,23 +216,20 @@ Vars <- colnames(aufgabe31df)
 Vars
 Namen <- c("tab_id", "raum_id", "zei_id")
 aufgabe31df <- aufgabe31df[, !(Vars %in% Namen)]
-aufgabe31df
 
 #mergen mit dataframe aus aufgabe2 für gesamteinwohner:
 
 aufgabe31mergedf <- merge(aufgabe31df, haushaltedfAgg2, by.x=c("raum", "jahr"), by.y=c("ID", "Group.2"))
-aufgabe31mergedf
 
 #neue spalte mit Aussenfortzuege pro Einwohner des Stadtteils im jeweiligen Jahr:
 #(diese Spalte ist gleichzeitig die Lösung)
 
 aufgabe31mergedf <- cbind(aufgabe31mergedf, "Anteil"=aufgabe31mergedf$zahl / aufgabe31mergedf$x)
-aufgabe31mergedf
+print(aufgabe31mergedf)
 
 #Fall 2: Binnenfortzug (zei_id: 20 und tab_id: 10):
 
 aufgabe32df <- subset(bewegungdfNeu, bewegungdfNeu$zei_id == 20 & bewegungdfNeu$tab_id == 10)
-aufgabe32df
 
 
 #entfernen der unwichtigen spalten:
@@ -252,23 +237,20 @@ Vars <- colnames(aufgabe32df)
 Vars
 Namen <- c("tab_id", "raum_id", "zei_id")
 aufgabe32df <- aufgabe32df[, !(Vars %in% Namen)]
-aufgabe32df
 
 #mergen mit dataframe aus aufgabe2 für gesamteinwohner:
 
 aufgabe32mergedf <- merge(aufgabe32df, haushaltedfAgg2, by.x=c("raum", "jahr"), by.y=c("ID", "Group.2"))
-aufgabe32mergedf
 
 #neue spalte mit Aussenfortzuege pro Einwohner des Stadtteils im jeweiligen Jahr:
 #(diese Spalte ist gleichzeitig die Lösung)
 
 aufgabe32mergedf <- cbind(aufgabe32mergedf, "Anteil"=aufgabe32mergedf$zahl / aufgabe32mergedf$x)
-aufgabe32mergedf
+print(aufgabe32mergedf)
 
 #Fall 3: Aussenzuzug (zei_id: 30 und tab_id: 10):
 
 aufgabe33df <- subset(bewegungdfNeu, bewegungdfNeu$zei_id == 30 & bewegungdfNeu$tab_id == 10)
-aufgabe33df
 
 
 #entfernen der unwichtigen spalten:
@@ -276,23 +258,20 @@ Vars <- colnames(aufgabe33df)
 Vars
 Namen <- c("tab_id", "raum_id", "zei_id")
 aufgabe33df <- aufgabe33df[, !(Vars %in% Namen)]
-aufgabe33df
 
 #mergen mit dataframe aus aufgabe2 für gesamteinwohner:
 
 aufgabe33mergedf <- merge(aufgabe33df, haushaltedfAgg2, by.x=c("raum", "jahr"), by.y=c("ID", "Group.2"))
-aufgabe33mergedf
 
 #neue spalte mit Aussenfortzuege pro Einwohner des Stadtteils im jeweiligen Jahr:
 #(diese Spalte ist gleichzeitig die Lösung)
 
 aufgabe33mergedf <- cbind(aufgabe33mergedf, "Anteil"=aufgabe33mergedf$zahl / aufgabe33mergedf$x)
-aufgabe33mergedf
+print(aufgabe33mergedf)
 
 #Fall 4: Binnenzuzug (zei_id: 40 und tab_id: 10):
 
 aufgabe34df <- subset(bewegungdfNeu, bewegungdfNeu$zei_id == 40 & bewegungdfNeu$tab_id == 10)
-aufgabe34df
 
 
 #entfernen der unwichtigen spalten:
@@ -300,23 +279,20 @@ Vars <- colnames(aufgabe34df)
 Vars
 Namen <- c("tab_id", "raum_id", "zei_id")
 aufgabe34df <- aufgabe34df[, !(Vars %in% Namen)]
-aufgabe34df
 
 #mergen mit dataframe aus aufgabe2 für gesamteinwohner:
 
 aufgabe34mergedf <- merge(aufgabe34df, haushaltedfAgg2, by.x=c("raum", "jahr"), by.y=c("ID", "Group.2"))
-aufgabe34mergedf
 
 #neue spalte mit Aussenfortzuege pro Einwohner des Stadtteils im jeweiligen Jahr:
 #(diese Spalte ist gleichzeitig die Lösung)
 
 aufgabe34mergedf <- cbind(aufgabe34mergedf, "Anteil"=aufgabe34mergedf$zahl / aufgabe34mergedf$x)
-aufgabe34mergedf
+print(aufgabe34mergedf)
 
 #Fall 5: Umzug innerhalb des Stadtteils (zei_id: 50 und tab_id: 10):
 
 aufgabe35df <- subset(bewegungdfNeu, bewegungdfNeu$zei_id == 50 & bewegungdfNeu$tab_id == 10)
-aufgabe35df
 
 
 #entfernen der unwichtigen spalten:
@@ -324,23 +300,20 @@ Vars <- colnames(aufgabe35df)
 Vars
 Namen <- c("tab_id", "raum_id", "zei_id")
 aufgabe35df <- aufgabe35df[, !(Vars %in% Namen)]
-aufgabe35df
 
 #mergen mit dataframe aus aufgabe2 für gesamteinwohner:
 
 aufgabe35mergedf <- merge(aufgabe35df, haushaltedfAgg2, by.x=c("raum", "jahr"), by.y=c("ID", "Group.2"))
-aufgabe35mergedf
 
 #neue spalte mit Aussenfortzuege pro Einwohner des Stadtteils im jeweiligen Jahr:
 #(diese Spalte ist gleichzeitig die Lösung)
 
 aufgabe35mergedf <- cbind(aufgabe35mergedf, "Anteil"=aufgabe35mergedf$zahl / aufgabe35mergedf$x)
-aufgabe35mergedf
+print(aufgabe35mergedf)
 
 #Fall 6: Sterbefaelle (zei_id: 10 und tab_id: 20):
 
 aufgabe36df <- subset(bewegungdfNeu, bewegungdfNeu$zei_id == 10 & bewegungdfNeu$tab_id == 20)
-aufgabe36df
 
 
 #entfernen der unwichtigen spalten:
@@ -348,23 +321,21 @@ Vars <- colnames(aufgabe36df)
 Vars
 Namen <- c("tab_id", "raum_id", "zei_id")
 aufgabe36df <- aufgabe36df[, !(Vars %in% Namen)]
-aufgabe36df
+
 
 #mergen mit dataframe aus aufgabe2 für gesamteinwohner:
 
 aufgabe36mergedf <- merge(aufgabe36df, haushaltedfAgg2, by.x=c("raum", "jahr"), by.y=c("ID", "Group.2"))
-aufgabe36mergedf
 
 #neue spalte mit Aussenfortzuege pro Einwohner des Stadtteils im jeweiligen Jahr:
 #(diese Spalte ist gleichzeitig die Lösung)
 
 aufgabe36mergedf <- cbind(aufgabe36mergedf, "Anteil"=aufgabe36mergedf$zahl / aufgabe36mergedf$x)
-aufgabe36mergedf
+print(aufgabe36mergedf)
 
 #Fall 7: Geburten (zei_id: 20 und tab_id: 20):
 
 aufgabe37df <- subset(bewegungdfNeu, bewegungdfNeu$zei_id == 20 & bewegungdfNeu$tab_id == 20)
-aufgabe37df
 
 
 #entfernen der unwichtigen spalten:
@@ -372,18 +343,16 @@ Vars <- colnames(aufgabe37df)
 Vars
 Namen <- c("tab_id", "raum_id", "zei_id")
 aufgabe37df <- aufgabe37df[, !(Vars %in% Namen)]
-aufgabe37df
 
 #mergen mit dataframe aus aufgabe2 für gesamteinwohner:
 
 aufgabe37mergedf <- merge(aufgabe37df, haushaltedfAgg2, by.x=c("raum", "jahr"), by.y=c("ID", "Group.2"))
-aufgabe37mergedf
 
 #neue spalte mit Aussenfortzuege pro Einwohner des Stadtteils im jeweiligen Jahr:
 #(diese Spalte ist gleichzeitig die Lösung)
 
 aufgabe37mergedf <- cbind(aufgabe37mergedf, "Anteil"=aufgabe37mergedf$zahl / aufgabe37mergedf$x)
-aufgabe37mergedf
+print(aufgabe37mergedf)
 
 
 
@@ -406,35 +375,32 @@ aufgabe37mergedf
 
 # Daten stehen in dichtedf (punkt 1 + 4) und beschaeftigtedf (2 + 3)
 
-beschaeftigtedf
-dichtedf
+#beschaeftigtedf
+#dichtedf
 
 #mergen der beiden tabellen:
 
 faktorendf <- merge(beschaeftigtedf, dichtedf, by.x=c("Stadtteil", "Nr."), by.y=c("Stadtteil", "Nr."))
-faktorendf
 
 #entfernen nicht benoetigter spalten:
 
 Vars <- colnames(faktorendf)
-Vars
-Namen <- c("Nr.", "Sozialversicherungspflichtig.Besch�ftigte.am.Wohnort", "Quote", "Arbeitslose", "Einwohner.insgesamt", "Einwohner.mit..Hauptwohnung", "Einwohner.mit..Nebenwohnung")
+Namen <- c("Nr.", "Sozialversicherungspflichtig.Beschäftigte.am.Wohnort", "Quote", "Arbeitslose", "Einwohner.insgesamt", "Einwohner.mit..Hauptwohnung", "Einwohner.mit..Nebenwohnung")
 faktorendf <- faktorendf[, !(Vars %in% Namen)]
-faktorendf
+
 
 
 #erstellen neuer spalte als erholungsfläche pro stadtfläche (anteil erholungsflächeaneil/100 * stadtfläche):
 
-faktorendf <- cbind(faktorendf, "Erholungsflaeche"=faktorendf$Erholungs.fl�chenanteil.in.. / 100 * faktorendf$Stadtfl�che.in.Quadratkilometer)
-faktorendf
+faktorendf <- cbind(faktorendf, "Erholungsflaeche"=faktorendf$Erholungs.flächenanteil.in.. / 100 * faktorendf$Stadtfläche.in.Quadratkilometer)
+
 
 #löschen von den 2 jetzt nicht mehr benötigten spalten:
 
 Vars <- colnames(faktorendf)
-Vars
-Namen <- c("Stadtfl�che.in.Quadratkilometer", "Erholungs.fl�chenanteil.in..")
+Namen <- c("Stadtfläche.in.Quadratkilometer", "Erholungs.flächenanteil.in..")
 faktorendf <- faktorendf[, !(Vars %in% Namen)]
-faktorendf
+
 
 #interpolieren der faktoren auf eine skala von 0-1 (bzw 1-0) linear zur besseren vergleichbarkeit:
 
@@ -458,16 +424,11 @@ faktorendf <- cbind(faktorendf, "Jugendarbeitslosenquotenorm"=RESCALE(faktorendf
 faktorendf <- cbind(faktorendf, "Einwohnernorm"=RESCALE(faktorendf$Einwohner.je.Quadratkilometer, 1, 0, min(faktorendf$Einwohner.je.Quadratkilometer), max(faktorendf$Einwohner.je.Quadratkilometer)))
 
 
-#Jetzt anwenden der AHP Methode für diese 4 Faktoren und 5 Stadtteile:
-#  (Nur 5 Stadtteile statt allen 86, da die AHP Methode nur kleinere Probleme gedacht ist, da man den paarweisen, subjektiven Vergleich per Hand machen muss und 86 hier den Rahmen sprengen würde)
-
-#Betrachtet werden hier die 5 Stadtteile: Mühlheim, Chorweiler, Altstadt-Süd, Ehrenfeld, Hahnwald (zufällig gewählt)
-
-#faktorendfNeu <- subset(faktorendf, faktorendf$Stadtteil == "M�lheim" | faktorendf$Stadtteil == "Chorweiler" | faktorendf$Stadtteil == "Ehrenfeld" | faktorendf$Stadtteil == "Hahnwald" | faktorendf$Stadtteil == "Altstadt-S�d")
+#Jetzt anwenden der AHP Methode für diese 4 Faktoren:
 
 
 #Paarweiservergleich für die 4 Faktoren untereinander (oberes Level des AHP Baums) [siehe Powerpoint]
-#  Die resultierende AHP Matrix in FuzzyAHP eingeben um Priorit�tenvektor zu erhalten:
+#  Die resultierende AHP Matrix in FuzzyAHP eingeben um Priorit?tenvektor zu erhalten:
 
 library(FuzzyAHP)
 
@@ -483,12 +444,12 @@ comparisonMatrix = pairwiseComparisonMatrix(comparisonMatrix)
 show(comparisonMatrix)
 weights = calculateWeights(comparisonMatrix)
 
-#Zeigen der Gewichte f�r die 4 Faktoren:
+#Zeigen der Gewichte f?r die 4 Faktoren:
 
 print(weights)
 
 
-#Ermitteln der Attraktivit�tsscore mit den Gewichten f�r die Attribute, sowie den normiereten Values unseres Dataframes f�r die Faktoren je Stadtteil:
+#Ermitteln der Attraktivit?tsscore mit den Gewichten f?r die Attribute, sowie den normiereten Values unseres Dataframes f?r die Faktoren je Stadtteil:
 # (Mithilfe des Fuzzy AHP Packages)
 
 valuestest <- faktorendf$Erholungsflaechenorm
@@ -496,45 +457,34 @@ valuestest <- cbind(valuestest, faktorendf$Arbeitslosenquotenorm)
 valuestest <- cbind(valuestest, faktorendf$Jugendarbeitslosenquotenorm)
 valuestest <- cbind(valuestest, faktorendf$Einwohnernorm)
 
-valuestest
-
-
-#values = c(faktorendfNeu$Erholungsflaechenorm[1], faktorendfNeu$Arbeitslosenquotenorm[1], faktorendfNeu$Jugendarbeitslosenquotenorm[1], faktorendfNeu$Einwohnernorm[1],
-#           faktorendfNeu$Erholungsflaechenorm[2], faktorendfNeu$Arbeitslosenquotenorm[2], faktorendfNeu$Jugendarbeitslosenquotenorm[2], faktorendfNeu$Einwohnernorm[2],
-#           faktorendfNeu$Erholungsflaechenorm[3], faktorendfNeu$Arbeitslosenquotenorm[3], faktorendfNeu$Jugendarbeitslosenquotenorm[3], faktorendfNeu$Einwohnernorm[3],
-#           faktorendfNeu$Erholungsflaechenorm[4], faktorendfNeu$Arbeitslosenquotenorm[4], faktorendfNeu$Jugendarbeitslosenquotenorm[4], faktorendfNeu$Einwohnernorm[4],
-#           faktorendfNeu$Erholungsflaechenorm[5], faktorendfNeu$Arbeitslosenquotenorm[5], faktorendfNeu$Jugendarbeitslosenquotenorm[5], faktorendfNeu$Einwohnernorm[5])
-#values
-#
-#values = matrix(values, nrow = length(values)/length(weights@weights), ncol = length(weights@weights), byrow = TRUE)
-#values
 
 
 # Ausgeben der Scores:
 
 result = calculateAHP(weights, valuestest)
-result
 
 
 score <- data.frame(faktorendf$Stadtteil)
 score <- cbind(score, result)
 
+print(score)
 
-#print(order(result))
 
 # Ranken der Stadtteil:
 
 rank = compareResults(result)
 print(rank)
 
-#print(order(rank))
+
 
 score <- score[order(score$result, decreasing = TRUE),] 
+print(score)
 
-grafik4 <- ggplot(score, aes(x=faktorendf.Stadtteil, y=result, fill=faktorendf.Stadtteil)) + geom_bar(stat = "identity", color="Black") +coord_flip() + ylab("Attraktivit�t") + xlab("Stadtteil")+ ggtitle("Attraktivit�t der Stadtteile")  + theme_classic() + theme(legend.position="none")
+grafik4 <- ggplot(score, aes(x=faktorendf.Stadtteil, y=result, fill=faktorendf.Stadtteil)) + geom_bar(stat = "identity", color="Black") +coord_flip() + ylab("Attraktivit?t") + xlab("Stadtteil")+ ggtitle("Attraktivit?t der Stadtteile")  + theme_classic() + theme(legend.position="none")
 grafik4 
 
+#ordnen für grafik:
 score$test <- reorder(score$faktorendf.Stadtteil, score$result)
 
-grafik5 <- ggplot(score, aes(y=score$result, fill=test)) + geom_bar(aes(x=test), data=score, stat = "identity", color="Black") +coord_flip() + ylab("Attraktivit�t") + xlab("Stadtteil")+ ggtitle("Attraktivit�t der Stadtteile")  + theme_classic() + theme(legend.position="none") + theme(axis.text.y = element_text(angle=30, vjust=0.5))
+grafik5 <- ggplot(score, aes(y=score$result, fill=test)) + geom_bar(aes(x=test), data=score, stat = "identity", color="Black") +coord_flip() + ylab("Attraktivit?t") + xlab("Stadtteil")+ ggtitle("Attraktivit?t der Stadtteile")  + theme_classic() + theme(legend.position="none") + theme(axis.text.y = element_text(angle=30, vjust=0.5))
 grafik5

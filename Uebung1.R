@@ -1,5 +1,11 @@
 #Aufgabe 1:
 
+#installieren der packages falls gebraucht:
+
+#install.packages("RPMG")
+#install.packages("FuzzyAHP")
+#install.packages("ggplot2")
+
 #setzten des working directories
 
 setwd("/home/martin/Projects/DSS")

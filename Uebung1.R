@@ -486,11 +486,11 @@ print(rank)
 score <- score[order(score$result, decreasing = TRUE),] 
 print(score)
 
-grafik4 <- ggplot(score, aes(x=faktorendf.Stadtteil, y=result, fill=faktorendf.Stadtteil)) + geom_bar(stat = "identity", color="Black") +coord_flip() + ylab("Attraktivit?t") + xlab("Stadtteil")+ ggtitle("Attraktivit?t der Stadtteile")  + theme_classic() + theme(legend.position="none")
+grafik4 <- ggplot(score, aes(x=faktorendf.Stadtteil, y=result, fill=faktorendf.Stadtteil)) + geom_bar(stat = "identity", color="Black") +coord_flip() + ylab("Attraktivität") + xlab("Stadtteil")+ ggtitle("Attraktivität der Stadtteile")  + theme_classic() + theme(legend.position="none") + theme(axis.text.y = element_text(angle=30, vjust=0.5))
 grafik4 
 
 #ordnen für grafik:
 score$test <- reorder(score$faktorendf.Stadtteil, score$result)
 
-grafik5 <- ggplot(score, aes(y=score$result, fill=test)) + geom_bar(aes(x=test), data=score, stat = "identity", color="Black") +coord_flip() + ylab("Attraktivit?t") + xlab("Stadtteil")+ ggtitle("Attraktivit?t der Stadtteile")  + theme_classic() + theme(legend.position="none") + theme(axis.text.y = element_text(angle=30, vjust=0.5))
+grafik5 <- ggplot(score, aes(y=score$result, fill=test)) + geom_bar(aes(x=test), data=score, stat = "identity", color="Black") +coord_flip() + ylab("Attraktivität") + xlab("Stadtteil")+ ggtitle("Attraktivität der Stadtteile")  + theme_classic() + theme(legend.position="none") + theme(axis.text.y = element_text(angle=30, vjust=0.5))
 grafik5

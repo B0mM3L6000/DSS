@@ -1,4 +1,5 @@
-setwd("D:/Projekte/DSS/DSS/CaseStudy")
+#setwd("D:/Projekte/DSS/DSS/CaseStudy")
+setwd("/home/martin/Projects/DSS/Casestudy")
 
 #einlesen der csv files
 
@@ -24,7 +25,7 @@ Namen <- c("type", "issue_date", "status")
 planesdf <- planesdf[, !(Vars %in% Namen)]
 
 datadf <- merge(datadf, planesdf, by.x=c("TailNum"), by.y=c("tailnum"))
-datadf
+#datadf
 
 write.table(datadf, "data.csv", sep=",",row.names = F)
 

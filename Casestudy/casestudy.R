@@ -28,3 +28,5 @@ datadf
 
 write.table(datadf, "data.csv", sep=",",row.names = F)
 
+
+dataexperiment <- read.csv(file="data.csv", nrows = 4000)

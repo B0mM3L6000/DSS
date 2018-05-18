@@ -12,3 +12,5 @@ print(weights)
 
 
 install.packages("RPMG")
+install.packages("fpp")
+install.packages("forecast")

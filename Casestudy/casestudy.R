@@ -26,9 +26,13 @@ Vars <- colnames(planesdf)
 Namen <- c("type", "issue_date", "status")
 planesdf <- planesdf[, !(Vars %in% Namen)]
 
-# hier gehen spalten verloren bei beiden operationen. Vermutlich genau die Spalten fÃ¼r die kein Eintrage in der entsprechenden anderen Tabelle 
-# zu dem jeweiligen merge schlÃ¼ssel existiert.
-datadf <- merge(datadf, planesdf, by.x=c("TailNum"), by.y=c("tailnum"))
+datadf <- merge(datadf, planesdf, by.x=c("TailNum"), by.y=c("tailnum"), all = TRUE)
+
+
+
+#########################################################################################
+#Terroruntersuchung:
+
 
 #subframe erstellen mit nur datum und sicherheitsdelay im mittel
 #(eventuell noch trend über jahr und saisonalitäten über tag und uhrzeit entfernen)
@@ -96,12 +100,52 @@ test <- subdataterrordfordered
 length(random_stl_terror)
 random_stl_terror
 
+#in vektor umformen:
+bereinigt <- as.numeric(random_stl_terror)
+bereinigt
+
+test$bereinigt <- bereinigt
+
+plot(as.ts(test$bereinigt))
+
+
+#anschläge aggregieren bei selben tag und vorerst land vernachlässigen:
+
+Vars <- colnames(terrordf)
+Vars
+Namen <- c("Land")
+anschlaegedf <- terrordf[, !(Vars %in% Namen)]
+
+#nicht nötig da oben bereits automatisch aggregiert
+#anschlaegedf <- aggregate(anschlaegedf[,c("Tote","Verletzte")], by=list(Monat=anschlaegedf$Monat, Tag=anschlaegedf$Tag), sum) #mean, max, min, sd etc.
+anschlaegedfordered <- anschlaegedf[order(anschlaegedf$Monat, anschlaegedf$Tag),] 
+
+#mergen mit der bereinigten tabelle von oben:
+
+finaldf <- merge(test, anschlaegedfordered, by.x=c("Tag","Monat"), by.y=c("Tag","Monat"), all = TRUE)
+
 # mergen von terror ins dataframe (problem: merged nur die spalten wo es auch einen anschlag gab an dem tag)
-dataterrordf <- merge(datadf, terrordf, by.x=c("DayofMonth","Month"), by.y=c("Tag","Monat"))
+#dataterrordf <- merge(datadf, terrordf, by.x=c("DayofMonth","Month"), by.y=c("Tag","Monat"))
 #datadf
 
+#####################################################################################################################################
+
+
 write.table(datadf, "data.csv", sep=",",row.names = F)
-write.table(dataterrordf,"dataterror.csv", sep=",",row.names = F)
+#write.table(dataterrordf,"dataterror.csv", sep=",",row.names = F)
 
-dataexperiment <- read.csv(file="data.csv", nrows = 4000)
+dataexperiment <- read.csv(file="data.csv")
 
+##### FLughafen frequencys nach flügen:
+
+tmp <- as.data.frame(table(dataexperiment$Origin))
+tmp2 <- tmp[tmp$Freq>10000,]
+hist(tmp$Freq)
+hist(log(tmp$Freq))
+
+airportstmp <- merge(tmp, airportsdf, by.x=c("Var1"), by.y=c("iata"))
+airportstmp2 <- merge(tmp2, airportsdf, by.x=c("Var1"), by.y=c("iata"))
+
+library(ggplot2)
+ggplot(airportstmp, aes(long,lat)) + geom_point()
+ggplot(airportstmp2, aes(long,lat, colour = Var1)) + geom_point()

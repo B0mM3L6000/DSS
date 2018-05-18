@@ -155,10 +155,11 @@ ggplot(airportstmp2, aes(long,lat)) + geom_point()
 
 
 clusters <- kmeans(airportstmp2[,7:8], 20)  #nach geographischer lage
-clusters <- kmeans(airportstmp2[,2], 5)    #nach frequency
+clusters <- kmeans(airportstmp[,2], 5)    #nach frequency
 
 airportstmp2$cluster <- as.factor(clusters$cluster)
+airportstmp$cluster <- as.factor(clusters$cluster)
 
 str(clusters)
 
-ggplot(airportstmp2, aes(long,lat, colour= cluster)) + geom_point()
+ggplot(airportstmp, aes(long,lat, colour= cluster)) + geom_point()

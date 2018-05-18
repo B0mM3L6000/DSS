@@ -148,4 +148,17 @@ airportstmp2 <- merge(tmp2, airportsdf, by.x=c("Var1"), by.y=c("iata"))
 
 library(ggplot2)
 ggplot(airportstmp, aes(long,lat)) + geom_point()
-ggplot(airportstmp2, aes(long,lat, colour = Var1)) + geom_point()
+ggplot(airportstmp2, aes(long,lat)) + geom_point()
+
+
+########################CLUSTER################
+
+
+clusters <- kmeans(airportstmp2[,7:8], 20)  #nach geographischer lage
+clusters <- kmeans(airportstmp2[,2], 5)    #nach frequency
+
+airportstmp2$cluster <- as.factor(clusters$cluster)
+
+str(clusters)
+
+ggplot(airportstmp2, aes(long,lat, colour= cluster)) + geom_point()

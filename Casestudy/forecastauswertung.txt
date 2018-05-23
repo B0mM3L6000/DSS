@@ -1,0 +1,73 @@
+trainingerror in 250 epochen von 24.0929 auf 23.8556
+
+
+
+threshhold: 0.375
+
+    error: 29.89294%
+
+    confusionmatrix:
+    534220  114316
+    147032  78712
+
+    auc: 0.5862
+
+threshhold: 0.4
+
+    error: 28.69264%
+
+    confusionmatrix:
+    555318  93218
+    157636  68108
+
+    auc: 0.579
+
+threshhold: 0.45
+
+    error: 27.25385%
+
+    confusionmatrix:
+    584957  63579
+    174696  51048
+
+    auc: 0.564  
+
+threshhold: 0.5
+
+    error: 26.20442%
+
+    confusionmatrix:
+    609372  39164
+    189936  35808
+
+    auc: 0.5491
+
+threshhold: 0.35
+
+    error: 31.28151%
+
+    confusionmatrix:
+    510716  137820
+    135668  90076
+
+    auc: 0.5933
+
+thresshold: 0.2
+
+    error: 46.49403%
+
+    confusionmatrix:
+    302921  345615
+     60873  164871
+
+    auc: 0.5987
+
+threshhold: 0.3
+
+    error: 35.14172%
+
+    confusionmatrix:
+    452315  196221
+    111016  114728
+
+    auc: 0.6028

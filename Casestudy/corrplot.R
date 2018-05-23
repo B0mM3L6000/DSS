@@ -1,6 +1,6 @@
 #setwd("/home/hl/Documents/Uni/DSS/Uebung2/CaseStudy/")
-setwd("D:/Projekte/DSS/DSS/CaseStudy")
-#setwd("/home/martin/Projects/DSS/Casestudy")
+#setwd("D:/Projekte/DSS/DSS/CaseStudy")
+setwd("/home/martin/Projects/DSS/Casestudy")
 
 #################datapreprocessing####################
 
@@ -16,14 +16,14 @@ Namen <- c("TailNum", "Month", "DayofMonth","DayOfWeek", "DepTime", "CRSDepTime"
 datadf <- datadf[, !(Vars %in% Namen)]
 datadf <- na.omit(datadf)
 
-#######corrplot für verspätungsfaktoren###############
+#######corrplot f?r versp?tungsfaktoren###############
 
 
 c <- cor(datadf)
 corrplot(c, method = "number")
 
 
-###########anteil verspätungen########################
+###########anteil versp?tungen########################
 
 #anteile an arrdelay:
 

@@ -1,6 +1,6 @@
 #setwd("/home/hl/Documents/Uni/DSS/Uebung2/CaseStudy/")
-setwd("D:/Projekte/DSS/DSS/CaseStudy")
-#setwd("/home/martin/Projects/DSS/Casestudy")
+#setwd("D:/Projekte/DSS/DSS/CaseStudy")
+setwd("/home/martin/Projects/DSS/Casestudy")
 
 library(RColorBrewer)
 library(wesanderson)
@@ -20,10 +20,10 @@ airportstmp <- na.omit(airportstmp)
 #maps <- get_map(location = "United States", zoom = 3)
 library(ggmap)
 library(RgoogleMaps)
-lat <- c(20,75) #lat für ganz
-lat <- c(25,55) #lat für mittel usa
-long <- c(-165,-55) #long für ganz
-long <- c(-125,-70) #long für mittel usa
+lat <- c(20,75) #lat f?r ganz
+lat <- c(25,55) #lat f?r mittel usa
+long <- c(-165,-55) #long f?r ganz
+long <- c(-125,-70) #long f?r mittel usa
 bbox <- make_bbox(long,lat,f=0.05)
 map <- get_map(bbox, maptype = "satellite", source="google")
 
@@ -43,6 +43,9 @@ library(ggplot2)
 clusters <- kmeans(airportstmp[,7:8], 10)  #nach geographischer lage in 10 Bereiche geclustert
 
 airportstmp$cluster <- as.factor(clusters$cluster)
+
+#speichern da er jedes mal anders clustert
+write.table(airportstmp, "cluster.csv", sep=",",row.names = F)
 
 #####Plotten der Cluster:
 

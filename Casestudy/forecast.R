@@ -151,6 +151,9 @@ gc()
 
 #ab hier forecast versuche:
 
+
+##############################################################
+####nicht teil der praesentation, da schlechte ergebnisse und sehr schlechte runtime/ramoptimierung
 #normales lineares model mit standart r
 #traininieren:
 m1 = glm(is_delayed~., family=binomial,data = data.frame(is_delayed = y_train, x_train))
@@ -175,14 +178,6 @@ real #confusion matrix
 error = (real[1,2]+real[2,1]) / length(y_test)
 error #error
 
-#falls etwas entfernt werden muss für mehr ramfreiheit nach dem testen (nur das gewuenschte jeweils ausführen)
-rm("x_test")
-rm("y_test")
-rm("class")
-rm("ptest")
-rm("prediction")
-rm("m1")
-gc()
 
 
 #plotten von roc und auc:
@@ -193,16 +188,26 @@ auc
 p <- plot(roc(y_test,prediction))
 p
 
+#falls etwas entfernt werden muss für mehr ramfreiheit nach dem testen (nur das gewuenschte jeweils ausführen)
+rm("x_test")
+rm("y_test")
+rm("class")
+rm("ptest")
+rm("prediction")
+rm("m1")
+gc()
 
 
+######################################################################
+#focus der praesentation:
 
 #falls oben geloescht hier nochmals training und test daten einlesen! 
 
 #xgboost mit tree hist:
 #trainieren:
-#hyperparameter: 32 tiefe baum, learningrate 0.1, 10 kerne parallel, 100 epochen, treemethode: histogramm, ziel: binary logistic
+#hyperparameter: 64 tiefe baum, 200 baeume, learningrate 0.1, 10 threads parallel, 250 epochen, treemethode: histogramm, ziel: binary logistic
 #ausgewaehlt durch ausprobieren
-bst <- xgboost(data = x_train, label = y_train, max.depth = 250, eta = 0.1, nthread = 10, nround = 5, objective = "binary:logistic", tree_method = "hist")
+bst <- xgboost(data = x_train, label = y_train, n_estimators = 200, max.depth = 64, eta = 0.1, nthread = 10, nround = 250, objective = "binary:logistic", tree_method = "hist")
 gc()
 
 #falls etwas entfernt werden muss für mehr ramfreiheit nach dem training (nur das gewuenschte jeweils ausführen)

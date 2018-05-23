@@ -2,10 +2,12 @@
 setwd("D:/Projekte/DSS/DSS/CaseStudy")
 #setwd("/home/martin/Projects/DSS/Casestudy")
 
+library(RColorBrewer)
+library(wesanderson)
 
 ####################Data Preprocessing#####################
 
-dataexperiment <- read.csv(file="data.csv", header=TRUE, encoding="UTF-8", nrows = 10000)
+dataexperiment <- read.csv(file="data.csv", header=TRUE, encoding="UTF-8")
 airportsdf <- read.csv(file="airports.csv", header=TRUE, encoding="UTF-8")
 
 
@@ -15,8 +17,21 @@ tmp <- as.data.frame(table(dataexperiment$Origin))
 airportstmp <- merge(tmp, airportsdf, by.x=c("Var1"), by.y=c("iata"))
 airportstmp <- na.omit(airportstmp)
 
+#maps <- get_map(location = "United States", zoom = 3)
+library(ggmap)
+library(RgoogleMaps)
+lat <- c(20,75) #lat für ganz
+lat <- c(25,55) #lat für mittel usa
+long <- c(-165,-55) #long für ganz
+long <- c(-125,-70) #long für mittel usa
+bbox <- make_bbox(long,lat,f=0.05)
+map <- get_map(bbox, maptype = "satellite", source="google")
+
+ggmap(map) + geom_point(data = airportstmp, aes(long,lat))+xlab("Breitengrad")+ylab("Laengengrad")+ggtitle("Flughaefen")
+
+
 library(ggplot2)
-ggplot(airportstmp, aes(long,lat)) + geom_point()
+#ggplot(airportstmp, aes(long,lat)) + geom_point()
 
 
 
@@ -31,8 +46,8 @@ airportstmp$cluster <- as.factor(clusters$cluster)
 
 #####Plotten der Cluster:
 
-ggplot(airportstmp, aes(long,lat, colour= cluster)) + geom_point()
+#ggplot(airportstmp, aes(long,lat, colour= cluster)) + geom_point()
 
-
+ggmap(map) + geom_point(data = airportstmp, aes(long,lat, colour = cluster))+xlab("Breitengrad")+ylab("Laengengrad")+ggtitle("Flughaefen Cluster") + guides(color="none")+ scale_color_manual(values = wes_palette(n=10, name="FantasticFox1", type="continuous")) 
 
 ###########################Untersuchung####################

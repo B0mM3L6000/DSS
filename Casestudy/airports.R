@@ -27,10 +27,10 @@ long <- c(-125,-70) #long f?r mittel usa
 bbox <- make_bbox(long,lat,f=0.05)
 map <- get_map(bbox, maptype = "satellite", source="google")
 
-ggmap(map) + geom_point(data = airportstmp, aes(long,lat))+xlab("Breitengrad")+ylab("Laengengrad")+ggtitle("Flughaefen")
+ggmap(map) + geom_point(data = airportstmp, aes(long,lat))+xlab("Laengengrad")+ylab("Breitengrad")+ggtitle("Flughaefen")
 
 
-library(ggplot2)
+#library(ggplot2)
 #ggplot(airportstmp, aes(long,lat)) + geom_point()
 
 
@@ -40,6 +40,7 @@ library(ggplot2)
 
 #####CLustern:
 
+set.seed(1) #zur reproduzierbarkeit gleicher cluster
 clusters <- kmeans(airportstmp[,7:8], 10)  #nach geographischer lage in 10 Bereiche geclustert
 
 airportstmp$cluster <- as.factor(clusters$cluster)
@@ -51,6 +52,6 @@ write.table(airportstmp, "cluster.csv", sep=",",row.names = F)
 
 #ggplot(airportstmp, aes(long,lat, colour= cluster)) + geom_point()
 
-ggmap(map) + geom_point(data = airportstmp, aes(long,lat, colour = cluster))+xlab("Breitengrad")+ylab("Laengengrad")+ggtitle("Flughaefen Cluster") + guides(color="none")+ scale_color_manual(values = wes_palette(n=10, name="FantasticFox1", type="continuous")) 
+ggmap(map) + geom_point(data = airportstmp, aes(long,lat, colour = cluster))+xlab("Laengengrad")+ylab("Breitengrad")+ggtitle("Flughaefen Cluster") + guides(color="none")+ scale_color_manual(values = wes_palette(n=10, name="FantasticFox1", type="continuous")) 
 
 ###########################Untersuchung####################
